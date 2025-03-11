@@ -14,25 +14,33 @@ settingsTab.id = "settingsTab";
 let clickVal = 1;
 let secVal = 0;
 let points = 0;
-let upgradeObj = {
-    upgrade1:{},
-    upgrade2:{},
-    upgrade3:{},
-    upgrade4:{},
-    upgrade5:{}
-};
+let upgradeArr = [
+    {clickVal:1,secVal:0,price:10},
+    {clickVal:0,secVal:5,price:250},
+    {clickVal:10,secVal:10,price:3000},
+    {clickVal:100,secVal:0,price:150000},
+    {clickVal:0,secVal:100,price:200000}
+];
 const showUpgrades = () => {
-  //  if (showHide === 0) {
-    upgrade.forEach((elo)=>{upgrade[elo].style.display="none"})
-    console.log(upgrade)
-    showUpgradesBtn.textContent = "Hide upgrades";
-   // showHide += 1
-   // } else {
-     //   upgrade.style.visibility = "hidden"
-    //   showUpgradesBtn.textContent = "Show upgrades"
-     //   showHide -= 1
-   // }
+   if (showHide === 0) {
+    for (let i = 0; i<5;i++) {
+    const price = ["price1","price2","price3","price4","price5"]
+    price.forEach((el)=>{
+        
+    })
+    upgrade[i].style.display = "flex";
 };
+    showUpgradesBtn.textContent = "Hide upgrades" 
+    showHide += 1
+   } else {
+    for (let i = 0; i<5;i++) {
+        upgrade[i].style.display = "none"};
+       showUpgradesBtn.textContent = "Show upgrades"
+        showHide -= 1 
+    }
+};
+const buyUpgrade = () => {
+}
 showUpgradesBtn.addEventListener("click",showUpgrades)
 clickFunction = () => {
     points += clickVal

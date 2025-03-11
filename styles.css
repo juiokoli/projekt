@@ -147,11 +147,10 @@ nav{
 .upgrade{
     background-color:teal;
     color: white;
-    display:flex;
+    display:none;
     justify-content: center;
     flex-wrap: wrap;
     justify-content: space-between;
-    display: block;
 }
 #placeholder{
     width: 15%;
