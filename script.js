@@ -1,6 +1,5 @@
 const click = document.getElementById("clickimg");
 const pointsP = document.getElementById("points");
-const upgrade1 = document.getElementById("upgrade1");
 const infoNav = document.getElementById("info")
 const contactNav = document.getElementById("contact")
 const settingsNav = document.getElementById("settings")
@@ -8,31 +7,41 @@ const settingsTab = document.createElement("div")
 const closeBtn = document.getElementById("close");
 const flipBtn = document.getElementById("flip");
 const smolgortBtn = document.getElementById("smolgort");
-settingsTab.id = "settingsTab"
+const showUpgradesBtn = document.getElementById("showUpgrades");
+const upgrade = document.querySelectorAll('.upgrade');
+let showHide = 0;
+settingsTab.id = "settingsTab";
 let clickVal = 1;
+let secVal = 0;
 let points = 0;
-let upgrades = {
-    upgrade1: {cost:10, clickBonus:1},
+let upgradeObj = {
+    upgrade1:{},
+    upgrade2:{},
+    upgrade3:{},
+    upgrade4:{},
+    upgrade5:{}
 };
-const buyUpgrade = () => {
-    if (points >= upgrades.upgrade1.cost) {
-    points -= upgrades.upgrade1.cost
-    clickVal += upgrades.upgrade1.clickBonus
-    pointsP.textContent = `Points: ${points}`
-    } else {
-        alert("Not enough points to buy upgrade")
-    }
+const showUpgrades = () => {
+  //  if (showHide === 0) {
+    upgrade.forEach((elo)=>{upgrade[elo].style.display="none"})
+    console.log(upgrade)
+    showUpgradesBtn.textContent = "Hide upgrades";
+   // showHide += 1
+   // } else {
+     //   upgrade.style.visibility = "hidden"
+    //   showUpgradesBtn.textContent = "Show upgrades"
+     //   showHide -= 1
+   // }
 };
-const clickFunction = () => {
+showUpgradesBtn.addEventListener("click",showUpgrades)
+clickFunction = () => {
     points += clickVal
     pointsP.textContent = `Points: ${points}`
 };
 click.addEventListener("click",clickFunction);
-upgrade1.addEventListener("click",buyUpgrade);
 const info = () => {
     alert("This is a simple clicker game I've made as my first project, using only html, css and js")
-}
-infoNav.addEventListener("click",info)
+};
 const contact = () => {
     alert("lorem ipsum..... just a test project")
 }
@@ -50,3 +59,4 @@ const settings = () => {
 }
 contactNav.addEventListener("click",contact)
 settingsNav.addEventListener("click",settings)
+infoNav.addEventListener("click",info)

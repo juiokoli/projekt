@@ -57,28 +57,20 @@ nav{
 .navimg{
     width: 50%;;
 }
-#click{
-    width: 55%;
-    display: flex;
-    justify-content: center;
-    margin: auto;
-}
 .click{
-    width: 70%;
+    width: 35%;
+    position: absolute;
+    left: 3%;
 }
 .click:hover{
-    width: 75%;
+    width: 40%;
 }
 .click:active{
-    width: 70%;
+    width: 35%;
 }
 #points{
     font-size: 200%;
     margin: auto;
-    text-align: center;
-}
-#upgrade1{
-    width: 20%;
     text-align: center;
 }
 #settingsTab{
@@ -121,11 +113,63 @@ nav{
     transform: rotate(180deg);
 }
 .smol{
-    width:20%;
+    width:15%;
 }
 .smol:hover{
-    width:25%;
+    width:18%;
 }
 .smol:active{
-    width:20%;
+    width: 15%;
+}
+#upgradeBar{
+    width: 100%;
+    height:2%;
+    background:radial-gradient(
+        azure,
+        aqua,
+        rgb(81, 81, 138)
+    );
+}
+#showUpgrades{
+    margin-left: 35%;
+    width: 30%;
+    height: 100%;
+    background-color: rgb(11, 112, 194);
+    color: white;
+    font-size: 110%;
+}
+#upgrades{
+    width: 40%;
+    position: relative;
+    left: 55%;
+    border: 1px solid red;
+}
+.upgrade{
+    background-color:teal;
+    color: white;
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    display: block;
+}
+#placeholder{
+    width: 15%;
+    margin: auto;
+    position: relative;
+    top: 15px;
+}
+#upgradeName,#upgradeDesc{
+    width: 80%;
+    text-align: center;    
+}
+#upgradeDesc{
+    margin-left: 20%;
+}
+#upgradeName{
+    font-size: 225%;
+    height: 50%;
+}
+#upgradeDesc{
+    font-size: 175%;
 }
