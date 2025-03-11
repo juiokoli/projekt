@@ -9,11 +9,13 @@ const flipBtn = document.getElementById("flip");
 const smolgortBtn = document.getElementById("smolgort");
 const showUpgradesBtn = document.getElementById("showUpgrades");
 const upgrade = document.querySelectorAll('.upgrade');
+const buybtn = document.querySelectorAll(".buybtn")
 let showHide = 0;
 settingsTab.id = "settingsTab";
 let clickVal = 1;
 let secVal = 0;
 let points = 0;
+const price = ["price1","price2","price3","price4","price5"]
 let upgradeArr = [
     {clickVal:1,secVal:0,price:10},
     {clickVal:0,secVal:5,price:250},
@@ -24,10 +26,10 @@ let upgradeArr = [
 const showUpgrades = () => {
    if (showHide === 0) {
     for (let i = 0; i<5;i++) {
-    const price = ["price1","price2","price3","price4","price5"]
-    price.forEach((el)=>{
-        
-    })
+        price[i] = document.createElement("p")
+        price[i].textContent = upgradeArr[i].price
+        price[i].classList.add("price")
+        upgrade[i].appendChild(price[i])
     upgrade[i].style.display = "flex";
 };
     showUpgradesBtn.textContent = "Hide upgrades" 
@@ -39,7 +41,10 @@ const showUpgrades = () => {
         showHide -= 1 
     }
 };
-const buyUpgrade = () => {
+const buyUpgrade1 = () => {
+    clickVal += upgradeArr[0].clickVal
+    points -= upgradeArr[0].clickVal.price
+    pointsP.textContent = `Points: ${points}`
 }
 showUpgradesBtn.addEventListener("click",showUpgrades)
 clickFunction = () => {
@@ -64,7 +69,9 @@ const settings = () => {
     document.getElementById("close").addEventListener("click",()=>{settingsTab.remove()});
     document.getElementById("flip").addEventListener("click",()=>{click.classList.toggle("flip")});
     document.getElementById("smolgort").addEventListener("click",()=>{click.classList.toggle("smol")})
+    console.log(buybtn)
 }
 contactNav.addEventListener("click",contact)
 settingsNav.addEventListener("click",settings)
 infoNav.addEventListener("click",info)
+buybtn[0].addEventListener("click",buyUpgrade1)

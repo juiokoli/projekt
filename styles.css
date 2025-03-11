@@ -172,3 +172,12 @@ nav{
 #upgradeDesc{
     font-size: 175%;
 }
+.price{
+  width: 100%;
+  text-align: center;
+  color: rgb(236, 236, 236);
+}
+.buybtn{
+    background-color: rgb(233, 233, 233);
+    border: 0;
+}
