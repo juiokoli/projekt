@@ -136,13 +136,13 @@ nav{
     height: 100%;
     background-color: rgb(11, 112, 194);
     color: white;
-    font-size: 110%;
+    font-size: clamp(100%,105%,110%);
 }
 #upgrades{
     width: 40%;
     position: relative;
     left: 55%;
-    border: 1px solid red;
+    border: 2px solid rgb(94, 168, 60);
 }
 .upgrade{
     background-color:teal;
@@ -151,6 +151,9 @@ nav{
     justify-content: center;
     flex-wrap: wrap;
     justify-content: space-between;
+    border: 1px solid black;
+    height: fit-content;
+    width: 100%;
 }
 #placeholder{
     width: 15%;
@@ -178,6 +181,20 @@ nav{
   color: rgb(236, 236, 236);
 }
 .buybtn{
-    background-color: rgb(233, 233, 233);
+    background-color: palevioletred;   
+    border-radius: 15%;
     border: 0;
+    width:20%;
+    height: 25px;
+}
+.combo{
+    box-shadow:10px 10px 10px 10px yellow;
+}
+#upgradeTab{
+    display: none;
+    height: 50vh;
+    width:100%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    flex-wrap: wrap;
 }
