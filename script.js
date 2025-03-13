@@ -11,7 +11,7 @@ const showUpgradesBtn = document.getElementById("showUpgrades");
 const upgrade = document.querySelectorAll('.upgrade');
 const buybtn = document.querySelectorAll(".buybtn");
 const upgradeCount = document.querySelectorAll("#upgradeCount");
-const upgradeCountArr = [0,0,0,0,0];
+let upgradeCountArr = [0,0,0,0,0];
 const upgradeTab = document.getElementById("upgradeTab");
 const levelP = document.getElementById("lvl");
 const expP = document.getElementById("exp");
@@ -19,6 +19,7 @@ const creditsNav = document.getElementById("credits");
 const creditsDiv = document.getElementById("creditsDiv");
 const closeCredBtn = document.getElementById("closeBtn");
 const comboGif = document.getElementById("comboGif");
+const saveNav = document.getElementById("save");
 let showHide = 0;
 settingsTab.id = "settingsTab";
 let clickVal = 1;
@@ -84,11 +85,10 @@ const showUpgrades = () => {
 const buyUpgrade = () => {
 const index = event.target.getAttribute("data-index");
 const upgradeChoice = upgradeArr[index];
-    if (points < upgradeArr[0].price) {
+    if (points < upgradeArr[index].price) {
         alert("Not enough points")
         return
-    }
-    
+    } else {
     clickVal += upgradeChoice.clickVal
     secVal += upgradeChoice.secVal
     points -= Math.ceil(upgradeChoice.price)
@@ -97,6 +97,7 @@ const upgradeChoice = upgradeArr[index];
     price[index].textContent = Math.ceil(upgradeArr[index].price.toString().length>10 ? upgradeArr[index].price.toExponential(2) : upgradeArr[index].price)
     upgradeCountArr[index]++
     upgradeCount[index].textContent = `Count: ${Number(upgradeCountArr[index])}`
+    }
 }
 const combo = () => {
     click.classList.add("combo")
@@ -140,11 +141,16 @@ const settings = () => {
     <button id="flip">Upside-down gort</button>
     <button id="smolgort">smol gort</button>
     <button id="close">Close</button>
+    <button id="reset">Reset</button>
     `;
     document.body.appendChild(settingsTab);
     document.getElementById("close").addEventListener("click",()=>{settingsTab.remove()});
     document.getElementById("flip").addEventListener("click",()=>{click.classList.toggle("flip")});
     document.getElementById("smolgort").addEventListener("click",()=>{click.classList.toggle("smol")})
+    document.getElementById("reset").addEventListener("click",()=>{
+        localStorage.clear()
+        location.reload()
+    })
     console.log(buybtn)
 }
 contactNav.addEventListener("click",contact)
@@ -160,4 +166,70 @@ creditsNav.addEventListener("click",()=>{
 })
 closeCredBtn.addEventListener("click",()=>{
     creditsDiv.style.display = "none"
+})
+const saveFunction = () => {
+    localStorage.setItem("points",points)
+    localStorage.setItem("currXp",currXp)
+    localStorage.setItem("currLvl",currLvl)
+    localStorage.setItem("xpToLvl",xpToLvl)
+    localStorage.setItem("clickVal",clickVal)
+    localStorage.setItem("secVal",secVal)
+    localStorage.setItem("upgradePoints",upgradePoints)
+    localStorage.setItem("upgradeCountArr",JSON.stringify(upgradeCountArr))
+    localStorage.setItem("flip",click.classList.contains("flip").toString());
+    localStorage.setItem("smol",click.classList.contains("smol").toString());
+    localStorage.setItem("upgradeArr",JSON.stringify(upgradeArr));
+}
+saveNav.addEventListener("click",saveFunction)
+document.addEventListener("DOMContentLoaded",()=>{
+    let storedPoints = localStorage.getItem("points")
+    let storedCurrXp = localStorage.getItem("currXp")
+    let storedCurrLvl = localStorage.getItem("currLvl")
+    let storedXpToLvl = localStorage.getItem("xpToLvl")
+    let storedClickVal = localStorage.getItem("clickVal")
+    let storedSecVal = localStorage.getItem("secVal")
+    let storedUpgradePoints = localStorage.getItem("upgradePoints")
+    let storedUpgradeCountArr = localStorage.getItem("upgradeCountArr")
+    let storedUpgradeArr = localStorage.getItem("upgradeArr")
+    let storedFlip = localStorage.getItem("flip")
+    let storedSmol = localStorage.getItem("smol")
+    if (storedPoints) {
+        points = Number(storedPoints)
+        pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
+    }
+    if (storedCurrXp) {
+        currXp = Number(storedCurrXp)
+        expP.textContent = `Exp: ${currXp}/${xpToLvl}`
+    }
+    if (storedCurrLvl) {
+        currLvl = Number(storedCurrLvl)
+        levelP.textContent = `Level: ${currLvl}`
+    }
+    if (storedXpToLvl) {
+        xpToLvl = Number(storedXpToLvl)
+    }
+    if (storedClickVal) {
+        clickVal = Number(storedClickVal)
+    }
+    if (storedSecVal) {
+        secVal = Number(storedSecVal)
+    }
+    if (storedUpgradePoints) {
+        upgradePoints = Number(storedUpgradePoints)
+    }
+    if (storedUpgradeCountArr) {
+        upgradeCountArr = JSON.parse(storedUpgradeCountArr)
+    }
+    if (storedUpgradeArr) {
+        upgradeArr = JSON.parse(storedUpgradeArr)
+    }
+    if (points >= 10) {
+        showUpgradesBtn.style.display = "block"
+    }
+    if (storedFlip === "true") {
+        click.classList.add("flip")
+    }
+    if (storedSmol === "true") {
+        click.classList.add("smol")
+    }
 })
