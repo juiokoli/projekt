@@ -1,3 +1,15 @@
+@keyframes COMBO {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(360deg) scale(2);
+    }
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
 *{
     margin: 0;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -70,8 +82,23 @@ nav{
 }
 #points{
     font-size: 200%;
-    margin: auto;
+    width: 40%;
     text-align: center;
+}
+#exp{
+    font-size: 200%;
+    width: 40%;
+    text-align: center;
+}
+#lvl{
+    font-size: 200%;
+    width: 20%;
+    text-align: left;
+    align-items: right;
+}
+#pointsXp{
+    display: flex;
+    justify-content: right;
 }
 #settingsTab{
     z-index: 100;
@@ -197,4 +224,46 @@ nav{
     overflow-y: scroll;
     scrollbar-width: thin;
     flex-wrap: wrap;
+}
+#comboText{
+    width: 100%;
+    text-align: center;
+    font-size: 1001%;
+    position: fixed;
+    top: 50%;
+}
+#creditsDiv{
+    position: fixed;
+    top: 50%;
+    left: 10%;
+    background-color: white;
+    width: 30%;
+    height: 30%;
+    display: none;
+}
+a{
+    color: black;;
+    text-decoration: none;
+    font-size: 200%;
+}
+#closeBtn{
+    height: 10%;
+    width: 20%;
+    position: relative;
+    top: 90%;
+    right: 20%;
+}
+#comboGif{
+    position: fixed;
+    top: 50%;
+    width: 50%;
+    left: 25%;
+    animation-name: COMBO;
+    animation-duration: 8s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
+    display: none;
+    pointer-events: none;
+    z-index: 10;
 }

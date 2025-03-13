@@ -10,8 +10,11 @@
     <header>
         <h1 id="title">Gort clicker</h1>
         <nav>
+            <div class="navbar" id="credits">
+            <p class="navp">Credits</p>
+        </div>
             <div class="navbar" id="info">
-                <p class="navp">Info</p>
+             <p class="navp">Info</p>
             </div>
             <div class="navbar" id="contact">
                 <p class="navp">Contact</p>
@@ -22,7 +25,11 @@
         </nav>
     </header>
     <main>
+        <div id="pointsXp">
         <p id="points">Points:</p>
+        <p id="lvl">Level:</p>
+        <p id="exp">Exp:</p>
+        </div>
         <img id="clickimg" class="click" src="gort.jpeg" alt="click here"/>
         <div id="upgrades">
             <div id="upgradeBar">
@@ -60,6 +67,11 @@
                 <p id="upgradeCount">Count:</p>
             </div>
         </div>
+    </div>
+    <img id="comboGif" src="Combo.gif" alt="Combo">
+    <div id="creditsDiv">
+        <a target="blank_" href="https://www.textstudio.com/">Font generator</a>
+        <button id="closeBtn">Close</button>
     </div>
     </main>
     <script src="script.js"></script>
