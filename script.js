@@ -20,7 +20,13 @@ const creditsDiv = document.getElementById("creditsDiv");
 const closeCredBtn = document.getElementById("closeBtn");
 const comboGif = document.getElementById("comboGif");
 const saveNav = document.getElementById("save");
-let showHide = 0;
+const skilltree = document.getElementById("skilltree");
+const levelsbtn = document.getElementById("levelsbtn");
+const skills = document.querySelectorAll(".skill");
+let upgradeFirstLaunch = false;
+let skillTreeFirstLaunch = false;
+let showHideUpg = 0;
+let showHideLvl = 0;
 settingsTab.id = "settingsTab";
 let clickVal = 1;
 let secVal = 0;
@@ -51,7 +57,10 @@ const level = () => {
     levelP.textContent = `Level: ${currLvl}`
 }
 const showUpgrades = () => {
-   if (showHide === 0) {
+   if (!upgradeFirstLaunch) {
+            skilltree.style.display = "none"
+        levelsbtn.textContent = "Show skill tree"
+        showUpgradesBtn.textContent = "Hide upgrades" 
     for (let i = 0; i<5;i++) {
         price[i] = document.createElement("p")
         price[i].textContent = upgradeArr[i].price.toString().length > 10 ? upgradeArr[i].price.toExponential(2) : upgradeArr[i].price ;
@@ -66,22 +75,50 @@ const showUpgrades = () => {
             upgrade[i].appendChild(buyButton);
     upgrade[i].style.display = "flex";
 };
-    showUpgradesBtn.textContent = "Hide upgrades" 
-    showHide = 2
-   } else if (showHide === 1)  {
+    upgradeFirstLaunch = true;
+    showHideLvl = 0;
+}
+ if (showHideUpg === 0)  {
+        skilltree.style.display = "none"
+        levelsbtn.textContent = "Show skill tree"
     for (let i = 0; i<5;i++) {
         upgrade[i].style.display = "flex";
         upgradeTab.style.display = "flex";
+        showUpgradesBtn.textContent = "Hide upgrades" 
     }
-    showHide = 2
-    } else if (showHide === 2) {
+    showHideUpg = 1
+    showHideLvl = 0
+    } else if (showHideUpg === 1) {
         for (let i = 0; i<5;i++) {
             upgrade[i].style.display = "none"}
     upgradeTab.style.display = "none"
     showUpgradesBtn.textContent = "Show upgrades"
-    showHide = 1 
+    showHideUpg = 0
     }
 };
+const showLevels = () => {
+    if (skillTreeFirstLaunch === false) {
+        skilltree.style.display = "grid"
+        levelsbtn.textContent = "Hide skill tree"
+        skillTreeFirstLaunch = true
+        upgradeTab.style.display = "none"
+        showUpgradesBtn.textContent = "Show upgrades"
+        showHideUpg = 0
+    }
+    if (showHideLvl === 0) {
+        skilltree.style.display = "grid"
+        levelsbtn.textContent = "Hide skill tree"
+        showHideLvl = 1
+        upgradeTab.style.display = "none"
+        showUpgradesBtn.textContent = "Show upgrades"
+        showHideUpg = 0
+    } else if (showHideLvl === 1) {
+        skilltree.style.display = "none"
+        levelsbtn.textContent = "Show skill tree"
+        showHideLvl = 0
+    }
+}
+levelsbtn.addEventListener("click",showLevels)
 const buyUpgrade = () => {
 const index = event.target.getAttribute("data-index");
 const upgradeChoice = upgradeArr[index];
