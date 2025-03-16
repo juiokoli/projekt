@@ -14,15 +14,31 @@ const upgradeCount = document.querySelectorAll("#upgradeCount");
 let upgradeCountArr = [0,0,0,0,0];
 const upgradeTab = document.getElementById("upgradeTab");
 const levelP = document.getElementById("lvl");
-const expP = document.getElementById("exp");
+const expBar = document.getElementById("exp");
 const creditsNav = document.getElementById("credits");
 const creditsDiv = document.getElementById("creditsDiv");
 const closeCredBtn = document.getElementById("closeBtn");
+const skillpointsP = document.getElementById("skillpoints");
 const comboGif = document.getElementById("comboGif");
 const saveNav = document.getElementById("save");
 const skilltree = document.getElementById("skilltree");
+const expLabel = document.getElementById("expLabel");
+const PPCP = document.getElementById("ppc");
+const PPSP = document.getElementById("pps");
 const levelsbtn = document.getElementById("levelsbtn");
 const skills = document.querySelectorAll(".skill");
+const goldRushBtn = document.getElementById("goldRush")
+let skillsArr = [
+    {name:"Skill 1",desc:"Gives 10% PPS & PPC per level",count:0, maxCount:5},
+    {name:"Skill 2",desc:"10% chance to crit(200% points) on click/level",count:0,maxCount:5},
+    {name:"Skill 3",desc:"Crits give more (33.3%/level)",count:0,maxCount:5},
+    {name:"Skill 4",desc:"Combo now gives 3x PPC",bought:false},
+    {name:"Skill 5",desc:"PPC += 10% of PPS per level",count:0,maxCount:5},
+    {name:"Skill 6",desc:"PPS x2",bought:false},
+    {name:"Skill 7",desc:"Unlocks gold rush ability",bought:false},
+    {name:"Skill 8",desc:"Makes combo also work on PPS",bought:false},
+    {name:"Skill 9",desc:"Gain 5x points",bought:false}
+    ]
 let upgradeFirstLaunch = false;
 let skillTreeFirstLaunch = false;
 let showHideUpg = 0;
@@ -35,11 +51,118 @@ let upgradePoints = 0;
 let currXp = 0;
 let currLvl = 0;
 let xpToLvl = 100;
-let comboTimeout;
+let comboTimeout;       
+let comboVal = skillsArr[3].bought ? 3 : 2;
 let clickCounter = 0;
+let clickMultiplier = 1;
+let secMultiplier = 1;
+let ppsFromPpc = 0;
+let critChance = 0;
+let critVal = 1
+const updateVals = () => {
+    PPCP.textContent = `PPC: ${(clickVal * clickMultiplier >= 1e10) ? (clickVal * clickMultiplier).toExponential(0) : (clickVal * clickMultiplier).toFixed(0)}`;
+    PPSP.textContent = `PPS: ${(secVal*secMultiplier).toString().length > 10 ?(secVal * secMultiplier).toExponential(0) : secVal*secMultiplier}`;
+    skillpointsP.textContent = `Skillpoints: ${upgradePoints}`
+    pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
+}
+const goldRush = () => {
+    if (skillsArr[6].bought) {
+        const originalText = goldRushBtn.innerHTML;
+        clickMultiplier *= 3;
+        secMultiplier *= 3;
+        updateVals();
+        goldRushBtn.disabled = true;
+        let countdownTime = 10;
+
+        const countdownInterval = setInterval(() => {
+            goldRushBtn.innerHTML = `Gold Rush - ${countdownTime}s`;
+            countdownTime--;
+            if (countdownTime < 0) {
+                clearInterval(countdownInterval);
+                goldRushBtn.innerHTML = originalText;
+                goldRushBtn.disabled = false;
+                clickMultiplier /= 3;
+                secMultiplier /= 3;
+                updateVals();
+
+                let cooldownTime = 300;
+                const cooldownInterval = setInterval(() => {
+                    goldRushBtn.innerHTML = `Cooldown - ${cooldownTime}s`;
+                    cooldownTime--;
+                    if (cooldownTime < 0) {
+                        clearInterval(cooldownInterval);
+                        goldRushBtn.innerHTML = "Gold Rush Ready!";
+                    }
+                },300000);
+            }
+        }, 1000);
+    } else {
+        alert("Gold rush not unlocked yet");
+    }
+};
+goldRushBtn.addEventListener("click",goldRush)
+const buySkills = () => {
+    for (let i = 0; i<skillsArr.length;i++){
+        skills[i].addEventListener("click",()=>{
+            if (skillsArr[i].count < skillsArr[i].maxCount || skillsArr[i].bought === false) {
+                if (upgradePoints >= 1) {
+                    if (i === 0) {
+                        skillsArr[i].count += 1
+                        clickMultiplier += 0.1
+                        secMultiplier += 0.1
+                    } else if (i === 1) {
+                        skillsArr[i].count += 1
+                        critChance += 10
+                    } else if (i === 2) {
+                        skillsArr[i].bought = true
+                        critVal += 33.3
+                    } else if (i === 3) {
+                        skillsArr[i].bought = true
+                        comboVal = 3
+                    } else if (i === 4) {
+                        skillsArr[i].count += 1
+                        ppsFromPpc += Math.ceil(secVal*0.1)
+                    } else if (i === 5) {
+                        skillsArr[i].bought = true
+                        secMultiplier *= 2
+                    } else if (i === 6) {
+                        skillsArr[i].bought = true
+                    } else if (i === 7) {
+                        secMultiplier *= comboVal
+                        skillsArr[i].bought = true
+                    } else if (i === 8) {
+                        clickMultiplier *= 5
+                        secMultiplier *= 5
+                    }
+                    upgradePoints -= 1
+                    updateVals()
+                } else {
+                    alert("Not enough points")
+                }
+            } else {
+                alert("Max level reached")
+            }
+        })
+    }
+}
+buySkills()
 const price = ["price1","price2","price3","price4","price5"]
-expP.textContent = `Exp: ${currXp}/${xpToLvl}`
+exp
 levelP.textContent = `Level: ${currLvl}`
+const skillDescs = document.querySelectorAll("#skillDesc")
+const skillDesc = () => {
+    for (let i = 0; i<skillsArr.length;i++) {
+        skills[i].addEventListener("mouseover",()=>{
+            skillDescs[i].textContent = skillsArr[i].desc
+            skillDescs[i].style.display = "block"
+        })
+        skills[i].addEventListener("mouseout", () => {
+            skillDescs[i].textContent = "";
+            skillDescs[i].style.display = "none"
+        });
+    }
+}
+skillDesc()
 let upgradeArr = [
     {clickVal:1,secVal:0,price:10},
     {clickVal:0,secVal:5,price:250},
@@ -53,6 +176,7 @@ const level = () => {
         upgradePoints += 1
         currXp = 0
         xpToLvl *= 2.5
+        skillpointsP.textContent = `Skillpoints: ${upgradePoints}`
     }
     levelP.textContent = `Level: ${currLvl}`
 }
@@ -62,6 +186,7 @@ const showUpgrades = () => {
         levelsbtn.textContent = "Show skill tree"
         showUpgradesBtn.textContent = "Hide upgrades" 
     for (let i = 0; i<5;i++) {
+        upgradeCount[i].textContent = `Count: ${Number(upgradeCountArr[i])}`
         price[i] = document.createElement("p")
         price[i].textContent = upgradeArr[i].price.toString().length > 10 ? upgradeArr[i].price.toExponential(2) : upgradeArr[i].price ;
         price[i].classList.add("price")
@@ -135,35 +260,51 @@ const upgradeChoice = upgradeArr[index];
     upgradeCountArr[index]++
     upgradeCount[index].textContent = `Count: ${Number(upgradeCountArr[index])}`
     }
+    updateVals()
 }
 const combo = () => {
     click.classList.add("combo")
     comboGif.style.display = "block"
     if (comboTimeout) {
         clearTimeout(comboTimeout)
+        updateVals()
     }
     comboTimeout = setTimeout(() => {  
         click.classList.remove("combo")
         comboGif.style.display = "none"
         clickCounter = 0
+        updateVals()
     },1000)
+    updateVals()
 }
 showUpgradesBtn.addEventListener("click",showUpgrades)
 const clickFunction = () => {
     currXp += 1;
-    expP.textContent = `Exp: ${currXp}/${xpToLvl}`
+    expBar.value = currXp;
+    expBar.max = xpToLvl;
+    expBar.textContent = "currXp/xpToLvl"
+    expLabel.textContent = `Exp: ${currXp}/${xpToLvl}`
     level()
     clickCounter++
     if (clickCounter >= 20) {
     combo()
     }
     if (clickCounter >= 20) {
-        points += clickVal*2;
+        if (Math.random*100 < Math.ceil(critChance)) {
+        points += clickVal*clickMultiplier*comboVal*Math.ceil(critVal);
+        } else {
+            points += clickVal*clickMultiplier*comboVal
+        }
         pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
     } else {
-    points += clickVal
+        if (Math.random*100 < Math.ceil(critChance)) {
+            points += clickVal*clickMultiplier*Math.ceil(critVal)
+     } else {
+    points += clickVal*clickMultiplier
+        }
     pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
     }
+    updateVals()
 };
 click.addEventListener("click",clickFunction);
 const info = () => {
@@ -194,7 +335,7 @@ contactNav.addEventListener("click",contact)
 settingsNav.addEventListener("click",settings)
 infoNav.addEventListener("click",info)
 const secFunction = () => {
-    points += secVal;
+    points += secVal*secMultiplier;
     pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
 };
 setInterval(secFunction,1000)
@@ -216,6 +357,15 @@ const saveFunction = () => {
     localStorage.setItem("flip",click.classList.contains("flip").toString());
     localStorage.setItem("smol",click.classList.contains("smol").toString());
     localStorage.setItem("upgradeArr",JSON.stringify(upgradeArr));
+    localStorage.setItem("skillsArr", JSON.stringify(skillsArr));
+    localStorage.setItem("skillsArr", JSON.stringify(skillsArr));
+    localStorage.setItem("upgradePoints", upgradePoints.toString());
+    localStorage.setItem("clickMultiplier", clickMultiplier.toString());
+    localStorage.setItem("secMultiplier", secMultiplier.toString());
+    localStorage.setItem("critChance", critChance.toString());
+    localStorage.setItem("critVal", critVal.toString());
+    localStorage.setItem("comboVal", comboVal.toString());
+    localStorage.setItem("ppsFromPpc", ppsFromPpc.toString());
 }
 saveNav.addEventListener("click",saveFunction)
 document.addEventListener("DOMContentLoaded",()=>{
@@ -230,13 +380,20 @@ document.addEventListener("DOMContentLoaded",()=>{
     let storedUpgradeArr = localStorage.getItem("upgradeArr")
     let storedFlip = localStorage.getItem("flip")
     let storedSmol = localStorage.getItem("smol")
+    let storedSkillsArr = localStorage.getItem("skillsArr");
+    let storedClickMultiplier = localStorage.getItem("clickMultiplier");
+    let storedSecMultiplier = localStorage.getItem("secMultiplier");
+    let storedCritChance = localStorage.getItem("critChance");
+    let storedCritVal = localStorage.getItem("critVal");
+    let storedComboVal = localStorage.getItem("comboVal");
+    let storedPpsFromPpc = localStorage.getItem("ppsFromPpc");
     if (storedPoints) {
         points = Number(storedPoints)
         pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
     }
     if (storedCurrXp) {
         currXp = Number(storedCurrXp)
-        expP.textContent = `Exp: ${currXp}/${xpToLvl}`
+        expLabel.textContent = `Exp: ${currXp}/${xpToLvl}`
     }
     if (storedCurrLvl) {
         currLvl = Number(storedCurrLvl)
@@ -253,6 +410,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
     if (storedUpgradePoints) {
         upgradePoints = Number(storedUpgradePoints)
+        skillpointsP.textContent += ` ${storedUpgradePoints}`
     }
     if (storedUpgradeCountArr) {
         upgradeCountArr = JSON.parse(storedUpgradeCountArr)
@@ -269,4 +427,62 @@ document.addEventListener("DOMContentLoaded",()=>{
     if (storedSmol === "true") {
         click.classList.add("smol")
     }
-})
+    if (storedSkillsArr) {
+        skillsArr = JSON.parse(storedSkillsArr);
+        for (let i = 0; i < skillsArr.length; i++) {
+            if (skillsArr[i].count > 0) {
+                skills[i].textContent = `${skillsArr[i].name} - Level: ${skillsArr[i].count}`;
+            }
+            
+            if (skillsArr[i].bought) {
+                skills[i].classList.add("bought");
+            }
+        }
+        
+        updateVals();
+    }
+    if (storedSkillsArr) {
+        skillsArr = JSON.parse(storedSkillsArr);
+
+        for (let i = 0; i < skillsArr.length; i++) {
+            // Update the skill counts visually
+            if (skillsArr[i].count > 0) {
+                skills[i].textContent = `${skillsArr[i].name} - Level: ${skillsArr[i].count}`;
+            }
+
+            if (skillsArr[i].bought) {
+                skills[i].classList.add("bought");
+            }
+        }
+    }
+
+    if (storedUpgradePoints) {
+        upgradePoints = parseInt(storedUpgradePoints);
+        skillpointsP.textContent = upgradePoints
+    }
+
+    if (storedClickMultiplier) {
+        clickMultiplier = parseFloat(storedClickMultiplier);
+    }
+    if (storedSecMultiplier) {
+        secMultiplier = parseFloat(storedSecMultiplier);
+    }
+
+    if (storedCritChance) {
+        critChance = parseInt(storedCritChance);
+    }
+    if (storedCritVal) {
+        critVal = parseFloat(storedCritVal);
+    }
+
+    if (storedComboVal) {
+        comboVal = parseFloat(storedComboVal);
+    }
+
+    if (storedPpsFromPpc) {
+        ppsFromPpc = parseInt(storedPpsFromPpc);
+    }
+
+    updateVals();
+});
+
