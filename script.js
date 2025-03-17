@@ -46,8 +46,8 @@ let showHideLvl = 0;
 settingsTab.id = "settingsTab";
 let clickVal = 1;
 let secVal = 0;
-let points = 1000;
-let upgradePoints = 30;
+let points = 0;
+let upgradePoints = 0;
 let currXp = 0;
 let currLvl = 0;
 let xpToLvl = 100;
@@ -283,7 +283,6 @@ const combo = () => {
 }
 showUpgradesBtn.addEventListener("click",showUpgrades)
 const clickFunction = () => {
-    console.log(ppsFromPpc)
     critRoll = critRollFunc()
     currXp += 1;
     expBar.value = currXp;
