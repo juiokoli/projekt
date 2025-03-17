@@ -467,6 +467,36 @@ a{
     .buybtn{
         width: 30%;
     }
+    #pointsXp{
+        font-size:33%;
+    }
+    #points{
+        font-size: 50%;
+    }
+}
+@media screen and (min-width:321px) and (max-width:533px){
+    #pointsXp{
+        font-size:35%;
+    }
+    #points{
+        font-size: 50%;
+    }
+}
+@media screen and (min-width:534px) and (max-width:623px) {
+    #pointsXp{
+        font-size:40%;
+    }
+    #points{
+        font-size: 50%;
+    }
+}
+@media screen and (min-width:624px) and (max-width:920px){
+    #pointsXp{
+        font-size:50%;
+    }
+    #points{
+        font-size: 50%;
+    }
 }
 @media screen and (min-width:321px){
     .navbar{

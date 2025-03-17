@@ -31,7 +31,7 @@ const goldRushBtn = document.getElementById("goldRush")
 let skillsArr = [
     {name:"Skill 1",desc:"Gives 10% PPS & PPC per level",count:0, maxCount:5},
     {name:"Skill 2",desc:"10% chance to crit(200% points) on click/level",count:0,maxCount:5},
-    {name:"Skill 3",desc:"Crits give more (33.3%/level)",count:0,maxCount:5},
+    {name:"Skill 3",desc:"Crits give more (33.3%/level)",count:0,maxCount:3},
     {name:"Skill 4",desc:"Combo now gives 3x PPC",bought:false},
     {name:"Skill 5",desc:"PPC += 10% of PPS per level",count:0,maxCount:5},
     {name:"Skill 6",desc:"PPS x2",bought:false},
@@ -46,8 +46,8 @@ let showHideLvl = 0;
 settingsTab.id = "settingsTab";
 let clickVal = 1;
 let secVal = 0;
-let points = 0;
-let upgradePoints = 0;
+let points = 1000;
+let upgradePoints = 30;
 let currXp = 0;
 let currLvl = 0;
 let xpToLvl = 100;
@@ -58,10 +58,14 @@ let clickMultiplier = 1;
 let secMultiplier = 1;
 let ppsFromPpc = 0;
 let critChance = 0;
-let critVal = 1
+let critVal = 2;
+const critRollFunc = () => {
+   return Math.ceil(Math.random()*100)
+}
+  let critRoll = critRollFunc()
 const updateVals = () => {
     PPCP.textContent = `PPC: ${(clickVal * clickMultiplier >= 1e10) ? (clickVal * clickMultiplier).toExponential(0) : (clickVal * clickMultiplier).toFixed(0)}`;
-    PPSP.textContent = `PPS: ${(secVal*secMultiplier).toString().length > 10 ?(secVal * secMultiplier).toExponential(0) : secVal*secMultiplier}`;
+    PPSP.textContent = `PPS: ${(secVal*secMultiplier >= 1e10) ?(secVal * secMultiplier).toExponential(0) : (secVal*secMultiplier).toFixed(0)}`;
     skillpointsP.textContent = `Skillpoints: ${upgradePoints}`
     pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
 }
@@ -114,27 +118,27 @@ const buySkills = () => {
                         skillsArr[i].count += 1
                         critChance += 10
                     } else if (i === 2) {
-                        skillsArr[i].bought = true
-                        critVal += 33.3
+                        skillsArr[i].count += 1
+                        critVal += 0.33
                     } else if (i === 3) {
                         skillsArr[i].bought = true
                         comboVal = 3
                     } else if (i === 4) {
                         skillsArr[i].count += 1
-                        ppsFromPpc += Math.ceil(secVal*0.1)
+                        ppsFromPpc += Math.ceil(secVal*(0.1*skillsArr[4].count))
                     } else if (i === 5) {
                         skillsArr[i].bought = true
                         secMultiplier *= 2
                     } else if (i === 6) {
                         skillsArr[i].bought = true
                     } else if (i === 7) {
-                        secMultiplier *= comboVal
                         skillsArr[i].bought = true
                     } else if (i === 8) {
                         clickMultiplier *= 5
                         secMultiplier *= 5
                     }
                     upgradePoints -= 1
+                    ppsFromPpc += Math.ceil(secVal*(0.1*skillsArr[4].count))
                     updateVals()
                 } else {
                     alert("Not enough points")
@@ -147,7 +151,6 @@ const buySkills = () => {
 }
 buySkills()
 const price = ["price1","price2","price3","price4","price5"]
-exp
 levelP.textContent = `Level: ${currLvl}`
 const skillDescs = document.querySelectorAll("#skillDesc")
 const skillDesc = () => {
@@ -259,6 +262,7 @@ const upgradeChoice = upgradeArr[index];
     price[index].textContent = Math.ceil(upgradeArr[index].price.toString().length>10 ? upgradeArr[index].price.toExponential(2) : upgradeArr[index].price)
     upgradeCountArr[index]++
     upgradeCount[index].textContent = `Count: ${Number(upgradeCountArr[index])}`
+    ppsFromPpc += Math.ceil(secVal*(0.1*skillsArr[4].count))
     }
     updateVals()
 }
@@ -279,6 +283,8 @@ const combo = () => {
 }
 showUpgradesBtn.addEventListener("click",showUpgrades)
 const clickFunction = () => {
+    console.log(ppsFromPpc)
+    critRoll = critRollFunc()
     currXp += 1;
     expBar.value = currXp;
     expBar.max = xpToLvl;
@@ -290,14 +296,14 @@ const clickFunction = () => {
     combo()
     }
     if (clickCounter >= 20) {
-        if (Math.random*100 < Math.ceil(critChance)) {
+        if (critRoll < Math.ceil(critChance)) {
         points += clickVal*clickMultiplier*comboVal*Math.ceil(critVal);
         } else {
             points += clickVal*clickMultiplier*comboVal
         }
         pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
     } else {
-        if (Math.random*100 < Math.ceil(critChance)) {
+        if (critRoll < Math.ceil(critChance)) {
             points += clickVal*clickMultiplier*Math.ceil(critVal)
      } else {
     points += clickVal*clickMultiplier
@@ -329,14 +335,32 @@ const settings = () => {
         localStorage.clear()
         location.reload()
     })
-    console.log(buybtn)
 }
 contactNav.addEventListener("click",contact)
 settingsNav.addEventListener("click",settings)
 infoNav.addEventListener("click",info)
+let comboActive = false; 
+
+
 const secFunction = () => {
-    points += secVal*secMultiplier;
-    pointsP.textContent = `Points: ${points.toString().length > 10? points.toExponential(2) : points}`
+    if (skillsArr[7].bought && clickCounter >= 20) {
+        if (!comboActive) { 
+            combo();
+            comboActive = true;
+            secVal *= comboVal; 
+        }
+        points += secVal * secMultiplier;        
+        updateVals();
+    } else {
+        points += secVal * secMultiplier;
+        updateVals();
+    }
+
+    if (comboActive && clickCounter < 20) {
+        secVal /= comboVal; 
+        comboActive = false; 
+    }
+    updateVals();
 };
 setInterval(secFunction,1000)
 creditsNav.addEventListener("click",()=>{
@@ -445,7 +469,6 @@ document.addEventListener("DOMContentLoaded",()=>{
         skillsArr = JSON.parse(storedSkillsArr);
 
         for (let i = 0; i < skillsArr.length; i++) {
-            // Update the skill counts visually
             if (skillsArr[i].count > 0) {
                 skills[i].textContent = `${skillsArr[i].name} - Level: ${skillsArr[i].count}`;
             }
