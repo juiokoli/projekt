@@ -413,8 +413,10 @@ a{
     background-color: thistle;
     text-align: center;
 }
-
 @media screen and (max-width:320px){
+    #skillDesc{
+        font-size:12px;
+    }
     .navbar{
         font-size: 125%;
     }
@@ -481,16 +483,22 @@ a{
     #points{
         font-size: 50%;
     }
+    #skillDesc{
+        font-size:12px;
+    }
 }
-@media screen and (min-width:534px) and (max-width:623px) {
+@media screen and (min-width:534px) and (max-width:650px) {
     #pointsXp{
         font-size:40%;
     }
     #points{
         font-size: 50%;
     }
+    #skillDesc{
+        font-size:12px;
+    }
 }
-@media screen and (min-width:624px) and (max-width:920px){
+@media screen and (min-width:651px) and (max-width:920px){
     #pointsXp{
         font-size:50%;
     }

@@ -27,6 +27,7 @@ const PPCP = document.getElementById("ppc");
 const PPSP = document.getElementById("pps");
 const levelsbtn = document.getElementById("levelsbtn");
 const skills = document.querySelectorAll(".skill");
+const skillDescs = document.querySelectorAll("#skillDesc")
 const goldRushBtn = document.getElementById("goldRush")
 let skillsArr = [
     {name:"Skill 1",desc:"Gives 10% PPS & PPC per level",count:0, maxCount:5},
@@ -59,6 +60,22 @@ let secMultiplier = 1;
 let ppsFromPpc = 0;
 let critChance = 0;
 let critVal = 2;
+
+for (let i = 0; i < skills.length; i++) {
+    // Initially hide all descriptions
+    skillDescs[i].style.display = 'none';
+    skillDescs[i].textContent = skillsArr[i].desc
+
+    // Add hover functionality to each skill
+    skills[i].addEventListener("mouseenter", () => {
+        skillDescs[i].style.display = "block";  // Show the description for the hovered skill
+    });
+
+    skills[i].addEventListener("mouseleave", () => {
+        skillDescs[i].style.display = "none";  // Hide the description when the mouse leaves
+    });
+}
+
 const critRollFunc = () => {
    return Math.ceil(Math.random()*100)
 }
@@ -274,6 +291,8 @@ const buySkills = () => {
         });
     }
 };
+buySkills()
+const price = ["price1","price2","price3","price4","price5"]
 let upgradeArr = [
     {clickVal:1,secVal:0,price:10},
     {clickVal:0,secVal:5,price:250},
